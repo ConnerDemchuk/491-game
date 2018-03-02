@@ -19,7 +19,6 @@ public abstract class SimpleCard : ICard {
 
     private string name;
     private int cost;
-    private bool pauseExecution = false;
 
     private List<ITask> tasks;
 
@@ -38,9 +37,10 @@ public abstract class SimpleCard : ICard {
         if (currentTaskNum == 0) {
             state.GetCurrentEntity().LoseEnergy(cost);
         }
+        bool pauseExecution = false;
         while (currentTaskNum < tasks.Count && !pauseExecution) {
             // If the task returns false, pause execution for input
-            if (!tasks[currentTaskNum].Run(state, this)) {
+            if (tasks[currentTaskNum].Run(state, this)) {
                 pauseExecution = true;
             }
             currentTaskNum++;
@@ -48,6 +48,7 @@ public abstract class SimpleCard : ICard {
         if (currentTaskNum < tasks.Count) {
             return false;
         } else {
+            currentTaskNum = 0;
             state.GetCurrentEntity().Discard(this);
             return true;
         }

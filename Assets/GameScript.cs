@@ -77,6 +77,7 @@ public class GameScript : MonoBehaviour {
                     }
                 } else if (curTurn is Enemy) {
                     ((Enemy)curTurn).TakeTurn();
+                    curState = BattleState.endTurn;
                 }
                 break;
             case BattleState.endTurn:

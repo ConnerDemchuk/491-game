@@ -44,6 +44,10 @@ public class Wizard : Player {
                 new Attack(),
             };
     }
+
+    public override string ToString() {
+        return "player";
+    }
 }
 
 /*

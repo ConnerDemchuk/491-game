@@ -9,13 +9,15 @@ public interface ITask {
 public class ExampleTask : ITask {
     public bool Run(GameState state, ICard cardPlayed) {
         state.TestEffect();
-        return true;
+        // Don't pause execution after returning
+        return false;
     }
 }
 
 public class SelectEnemy : ITask {
     public bool Run(GameState state, ICard cardPlayed) {
         state.SetState(GameScript.BattleState.chooseEnemy);
-        return false;
+        // Pause execution after returning
+        return true;
     }
 }
