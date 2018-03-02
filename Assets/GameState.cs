@@ -4,11 +4,22 @@ using UnityEngine;
 
 public class GameState {
 
+    private GameScript script;
+
     private int numPlayers = 0;
     List<Entity> entities = new List<Entity>();
     List<Player> players = new List<Player>();
     List<Entity> enemies = new List<Entity>();
     Entity currentEntity;
+    Entity currentTarget;
+
+    public GameState(GameScript script) {
+        this.script = script;
+    }
+
+    public void SetState(GameScript.BattleState state) {
+        script.SetState(state);
+    }
 
     public void AddEntity(Entity e) {
         entities.Add(e);
@@ -43,6 +54,10 @@ public class GameState {
         currentEntity.BeginTurn();
     }
 
+    public void SetTarget(Entity target) {
+        currentTarget = target;
+    }
+
     public void EndTurn() {
         currentEntity.EndTurn();
     }
@@ -52,15 +67,15 @@ public class GameState {
     }
 
     public List<Player> GetPlayers() {
-        return new List<Player>(players);
+        return players;
     }
 
     public List<Entity> GetEntities() {
-        return new List<Entity>(entities);
+        return entities;
     }
     
     public List<Entity> GetEnemies() {
-        return new List<Entity>(enemies);
+        return enemies;
     }
 
     public Entity GetEntity(int i) {
@@ -75,7 +90,13 @@ public class GameState {
         currentEntity = i;
     }
 
-    public void Kill(Entity i) {
+    public void DisplayEntities() {
+        for (int i = 0; i < entities.Count; i++) {
+            UnityOutput(i + ": " + entities[i].ToString());
+        }
+    }
+
+public void Kill(Entity i) {
         if (currentEntity == i) {
             NextTurn();
         }
@@ -91,7 +112,7 @@ public class GameState {
     }
 
     public void TestEffect() {
-        UnityOutput("You attack!  It's not very effective.");
+        UnityOutput("You attack! It's not very effective.");
     }
 
     public Entity NextTurn() {

@@ -11,22 +11,22 @@ public class Pawn : Enemy {
     public Pawn() : base(startingHP, cardsPerTurn, energyPerTurn, GetStartingCards()) {
     }
 
-    private static List<Card> GetStartingCards() {
-        return new List<Card> {
-                new Attack(),
-                new Attack(),
-                new Attack(),
-                new Attack(),
-                new Attack(),
-                new Attack(),
-                new Attack(),
-                new Attack(),
-                new Attack(),
-                new Attack()
-            };
+    private static List<ICard> GetStartingCards() {
+        return new List<ICard> {
+            new Attack(),
+            new Attack(),
+            new Attack(),
+            new Attack(),
+            new Attack(),
+            new Attack(),
+            new Attack(),
+            new Attack(),
+            new Attack(),
+            new Attack()
+        };
     }
 
-    public override void TurnLogic() {
+    public override void TakeTurn() {
         GameState.UnityOutput("The pawn attacks! It's not very effective.");
         GameState.UnityOutput("\n");
     }

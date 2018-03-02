@@ -2,22 +2,30 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class Card {
-    private string name;
-    private int cost;
+public interface ICard {
+    /*
     public enum Rarity {
         Common = 0,
         Uncommon = 1,
         Rare = 2
     }
-    Rarity rarity;
+    */
+    int GetCost();
+    bool Run(GameState state);
+    string ToString();
+}
+
+public abstract class SimpleCard : ICard {
+
+    private string name;
+    private int cost;
+    private bool pauseExecution = false;
 
     private List<ITask> tasks;
 
-    public Card(string name, int cost, Rarity rarity, List<ITask> tasks) {
+    public SimpleCard(string name, int cost, List<ITask> tasks) {
         this.name = name;
         this.cost = cost;
-        this.rarity = rarity;
         this.tasks = tasks;
     }
 
@@ -25,16 +33,24 @@ public abstract class Card {
         return cost;
     }
 
-    public Rarity GetRarity() {
-        return rarity;
-    }
-
-    public void Run(GameState state) {
-
-        foreach (ITask task in tasks) {
-            task.Run(state, this);
+    int currentTaskNum = 0;
+    public bool Run(GameState state) {
+        if (currentTaskNum == 0) {
+            state.GetCurrentEntity().LoseEnergy(cost);
         }
-        state.GetCurrentEntity().Discard(this);
+        while (currentTaskNum < tasks.Count && !pauseExecution) {
+            // If the task returns false, pause execution for input
+            if (!tasks[currentTaskNum].Run(state, this)) {
+                pauseExecution = true;
+            }
+            currentTaskNum++;
+        }
+        if (currentTaskNum < tasks.Count) {
+            return false;
+        } else {
+            state.GetCurrentEntity().Discard(this);
+            return true;
+        }
     }
 
     override
@@ -43,14 +59,31 @@ public abstract class Card {
     }
 }
 
-public class Attack : Card {
+public class Attack : SimpleCard {
     private static string name = "Attack";
     private static int cost = 1;
-    private static Rarity rarity = Rarity.Common;
     private static List<ITask> taskList = new List<ITask> {
             new ExampleTask()
         };
 
-    public Attack() : base(name, cost, rarity, taskList) {
+    public Attack() : base(name, cost, taskList) {
     }
 }
+
+/*
+public void QueueEnemySelect() {
+    script.SetState(GameScript.BattleState.chooseEnemy);
+}
+
+public void QueueTargetSelect() {
+    script.SetState(GameScript.BattleState.chooseTarget);
+}
+
+public void QueueNonSelfTargetSelect() {
+    script.SetState(GameScript.BattleState.chooseNonSelfTarget);
+}
+
+public void QueueAllySelect() {
+    script.SetState(GameScript.BattleState.chooseAlly);
+}
+*/

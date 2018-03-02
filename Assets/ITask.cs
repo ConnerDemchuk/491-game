@@ -3,11 +3,19 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public interface ITask {
-    void Run(GameState state, Card cardPlayed);
+    bool Run(GameState state, ICard cardPlayed);
 }
 
 public class ExampleTask : ITask {
-    public void Run(GameState state, Card cardPlayed) {
+    public bool Run(GameState state, ICard cardPlayed) {
         state.TestEffect();
+        return true;
+    }
+}
+
+public class SelectEnemy : ITask {
+    public bool Run(GameState state, ICard cardPlayed) {
+        state.SetState(GameScript.BattleState.chooseEnemy);
+        return false;
     }
 }

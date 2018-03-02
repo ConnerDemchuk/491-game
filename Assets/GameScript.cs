@@ -5,23 +5,28 @@ using UnityEngine;
 public class GameScript : MonoBehaviour {
 
     public enum BattleState {
-        beginFight,
         beginTurn,
-        chooseCard,
+        choosePlayCard,
         chooseTarget,
+        chooseNonSelfTarget,
+        chooseEnemy,
+        chooseAlly,
         endTurn,
         endFight
     };
     BattleState curState;
-    Entity turn;
-    Card activatedCard;
+    Entity curTurn;
+    ICard curCard;
 
     GameState state;
+    public void SetState(BattleState state) {
+        curState = state;
+    }
 
     // Use this for initialization
     void Start() {
 
-        state = new GameState();
+        state = new GameState(this);
 
         Player p1 = new Wizard();
         Player p2 = new Wizard();
@@ -32,51 +37,63 @@ public class GameScript : MonoBehaviour {
         state.AddEntity(enemy1);
 
         state.BeginFight();
-        turn = state.GetCurrentEntity();
+
+        curTurn = state.GetCurrentEntity();
         curState = BattleState.beginTurn;
+    }
+
+    private static int getKeyNum() {
+        if (Input.GetKeyDown(KeyCode.Alpha1)) return 0;
+        if (Input.GetKeyDown(KeyCode.Alpha2)) return 1;
+        if (Input.GetKeyDown(KeyCode.Alpha3)) return 2;
+        if (Input.GetKeyDown(KeyCode.Alpha4)) return 3;
+        if (Input.GetKeyDown(KeyCode.Alpha5)) return 4;
+        return -1;
     }
 
     // Update is called once per frame
     void Update() {
-
-        if (curState == BattleState.beginFight) {
-            state.BeginFight();
-        } else if (curState == BattleState.beginTurn) {
-            state.BeginTurn();
-            turn.DisplayHand();
-            curState = BattleState.chooseCard;
-            GameState.UnityOutput("Turn Begins");
-        } else if (curState == BattleState.chooseCard) {
-            // if a card a picked, do use effect (discard, trash, ect.)
-            // activate the card / pick its target
-            // then stay in the same state
-            if (turn is Player) {
-
-                if (Input.GetKeyDown(KeyCode.Alpha1)) {
-                    turn.LoseEnergy(turn.GetCard(0).GetCost());
-                    turn.GetCard(0).Run(state);
-                    GameState.UnityOutput("You now have " + turn.GetEnergy() + " energy!");
+        int keyNum;
+        switch (curState) {
+            case BattleState.beginTurn:
+                GameState.UnityOutput("Turn Begins");
+                state.BeginTurn();
+                curTurn.DisplayHand();
+                curState = BattleState.choosePlayCard;
+                break;
+            case BattleState.choosePlayCard:
+                // if a card a picked, do use effect (discard, trash, ect.)
+                // activate the card / pick its target
+                // then stay in the same state
+                if (curTurn is Player) {
+                    keyNum = getKeyNum();
+                    if (keyNum != -1) {
+                        curCard = curTurn.GetCard(keyNum);
+                        curCard.Run(state);
+                        GameState.UnityOutput("You now have " + curTurn.GetEnergy() + " energy!");
+                    }
+                    if (curTurn.GetEnergy() <= 0) {
+                        curState = BattleState.endTurn;
+                    }
+                } else if (curTurn is Enemy) {
+                    ((Enemy)curTurn).TakeTurn();
                 }
-                if (Input.GetKeyDown(KeyCode.Alpha2)) turn.GetCard(1).Run(state);
-                if (Input.GetKeyDown(KeyCode.Alpha3)) turn.GetCard(2).Run(state);
-                if (Input.GetKeyDown(KeyCode.Alpha4)) turn.GetCard(3).Run(state);
-                if (Input.GetKeyDown(KeyCode.Alpha5)) turn.GetCard(4).Run(state);
-
-                if (turn.GetEnergy() <= 0) curState = BattleState.endTurn;
-
-            } else if (turn is Enemy) {
-
-                turn.TakeTurn();
-                curState = BattleState.endTurn;
-
-            }
-
-            // If they hit the end turn button, go to end turn state
-        } else if (curState == BattleState.endTurn) {
-            turn.EndTurn();
-            GameState.UnityOutput("Your turn is done!");
-            turn = state.NextTurn();
-            curState = BattleState.beginTurn;
+                break;
+            case BattleState.endTurn:
+                curTurn.EndTurn();
+                GameState.UnityOutput("Your turn is done!");
+                curTurn = state.NextTurn();
+                curState = BattleState.beginTurn;
+                break;
+            case BattleState.chooseTarget:
+                state.DisplayEntities();
+                keyNum = getKeyNum();
+                if (keyNum != -1) {
+                    state.SetTarget(state.GetEntity(keyNum));
+                    curState = BattleState.choosePlayCard;
+                }
+                curCard.Run(state);
+                break;
         }
     }
 }
