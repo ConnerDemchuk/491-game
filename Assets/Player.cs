@@ -5,8 +5,9 @@ using UnityEngine;
 
 public abstract class Player : Entity {
 
-    private int maxHP;
     private int hp;
+    private static int playerCount = 1;
+    private int playerNum;
 
     private int currentEnergy;
 
@@ -14,9 +15,14 @@ public abstract class Player : Entity {
 
     public Player(int startingHP, int cardsPerTurn, int energyPerTurn, List<ICard> classCards, List<ICard> startingCards) : base(startingHP, cardsPerTurn, energyPerTurn, startingCards) {
         this.classCards = classCards;
-        maxHP = startingHP;
         hp = startingHP;
         currentEnergy = energyPerTurn;
+        playerNum = playerCount;
+        playerCount++;
+    }
+
+    protected int GetPlayerNum() {
+        return playerNum;
     }
 }
 
@@ -41,12 +47,12 @@ public class Wizard : Player {
                 new Attack(),
                 new Attack(),
                 new Attack(),
-                new Attack(),
+                new EndTurn()
             };
     }
 
     public override string ToString() {
-        return "player";
+        return "player " + GetPlayerNum();
     }
 }
 

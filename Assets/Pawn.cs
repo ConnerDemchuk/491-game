@@ -8,17 +8,14 @@ public class Pawn : Enemy {
     private static int cardsPerTurn = 5;
     private static int energyPerTurn = 3;
 
+    private static System.Random rng = new System.Random();
+
     public Pawn() : base(startingHP, cardsPerTurn, energyPerTurn, GetStartingCards()) {
     }
 
     private static List<ICard> GetStartingCards() {
         return new List<ICard> {
-            new Attack(),
-            new Attack(),
-            new Attack(),
-            new Attack(),
-            new Attack(),
-            new Attack(),
+            new PWN(),
             new Attack(),
             new Attack(),
             new Attack(),
@@ -26,8 +23,14 @@ public class Pawn : Enemy {
         };
     }
 
-    public override void TakeTurn() {
-        GameState.UnityOutput("The pawn attacks! It's not very effective.");
-        GameState.UnityOutput("\n");
+    public override void ChooseTarget() {
+        GameState state = GetState();
+        List<Player> players = state.GetPlayers();
+        state.SetTarget(players[rng.Next(0, players.Count)]);
+    }
+
+    public override ICard ChooseCard() {
+        List<ICard> hand = GetHand();
+        return hand[rng.Next(0, hand.Count)];
     }
 }

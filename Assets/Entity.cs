@@ -59,6 +59,10 @@ public abstract class Entity {
         return hp;
     }
 
+    public void DealDamage(Entity e, int amount) {
+        e.Damage(amount);
+    }
+
     public void Damage(int amount) {
         if (alive) {
             SetHP(hp - amount);
@@ -113,7 +117,7 @@ public abstract class Entity {
 
     public void DisplayHand() {
         for (int i = 0; i < hand.Count; i++) {
-            GameState.UnityOutput(i + ": " + hand[i].ToString());
+            GameState.UnityOutput(i + 1 + ": " + hand[i].ToString());
         }
     }
 

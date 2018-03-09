@@ -7,11 +7,14 @@ public class GameState {
     private GameScript script;
 
     private int numPlayers = 0;
-    List<Entity> entities = new List<Entity>();
-    List<Player> players = new List<Player>();
-    List<Entity> enemies = new List<Entity>();
-    Entity currentEntity;
-    Entity currentTarget;
+    private List<Entity> entities = new List<Entity>();
+    private List<Player> players = new List<Player>();
+    private List<Entity> enemies = new List<Entity>();
+
+    private Entity currentEntity;
+    private Entity currentTarget;
+
+    private Stack<ICard> cardStack = new Stack<ICard>();
 
     public GameState(GameScript script) {
         this.script = script;
@@ -38,8 +41,8 @@ public class GameState {
         msgNumber++;
     }
 
-    public static void UnityOutput(string msg) {
-        UnityOutput(String.Format("{0}", msgNumber), msg);
+    public static void UnityOutput(object msg) {
+        UnityOutput(String.Format("{0}", msgNumber), msg.ToString());
     }
 
 
@@ -56,6 +59,25 @@ public class GameState {
 
     public void SetTarget(Entity target) {
         currentTarget = target;
+    }
+
+    public Entity GetTarget() {
+        return currentTarget;
+    }
+
+    public void CardStart(ICard card) {
+        cardStack.Push(card);
+    }
+
+    public void CardEnd() {
+        cardStack.Pop();
+    }
+
+    public ICard GetCurrentCard() {
+        if (cardStack.Count == 0) {
+            return null;
+        }
+        return cardStack.Peek();
     }
 
     public void EndTurn() {
@@ -92,11 +114,17 @@ public class GameState {
 
     public void DisplayEntities() {
         for (int i = 0; i < entities.Count; i++) {
-            UnityOutput(i + ": " + entities[i].ToString());
+            UnityOutput(i + 1 + ": " + entities[i]);
         }
     }
 
-public void Kill(Entity i) {
+    public void DisplayEntitiesHP() {
+        for (int i = 0; i < entities.Count; i++) {
+            UnityOutput(entities[i] + ": " + entities[i].GetHP());
+        }
+    }
+
+    public void Kill(Entity i) {
         if (currentEntity == i) {
             NextTurn();
         }
@@ -109,10 +137,6 @@ public void Kill(Entity i) {
 
     public void Damage(Entity e, int amount) {
         Heal(e, -amount);
-    }
-
-    public void TestEffect() {
-        UnityOutput("You attack! It's not very effective.");
     }
 
     public Entity NextTurn() {
