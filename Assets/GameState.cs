@@ -15,7 +15,7 @@ public class GameState {
     private Entity currentTarget;
 
     private Stack<ICard> cardStack = new Stack<ICard>();
-
+    
     public GameState(GameScript script) {
         this.script = script;
     }
@@ -124,11 +124,17 @@ public class GameState {
         }
     }
 
-    public void Kill(Entity i) {
-        if (currentEntity == i) {
+    public void Kill(Entity e) {
+        if (currentEntity == e) {
             NextTurn();
         }
-        entities.Remove(i);
+        UnityOutput(e);
+        entities.Remove(e);
+        enemies.Remove(e);
+        if (e is Player) {
+            players.Remove((Player)e);
+        }
+        UnityOutput(entities);
     }
 
     public void Heal(Entity e, int amount) {
