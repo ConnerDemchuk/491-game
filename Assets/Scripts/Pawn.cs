@@ -15,7 +15,8 @@ public class Pawn : Enemy {
 
     private static List<ICard> GetStartingCards() {
         return new List<ICard> {
-            new PWN(),
+            //new PWN(),
+            new Attack(),
             new Attack(),
             new Attack(),
             new Attack(),
