@@ -113,10 +113,15 @@ public class GameScript : MonoBehaviour {
         {
             cardtexts1[k].text = " ";
         }
-        //effects.RemoveAt(i);
-        for (int k = 0; k < effects.Count; k++)
+        List<ICard> temp = new List<ICard>();
+        foreach (ICard card in effects)
         {
-            cardtexts1[k].text = "Name: " + effects[k].ToString() + " Cost: " + effects[k].GetCost();
+            temp.Add(card);
+        }
+        temp.RemoveAt(i);
+        for (int k = 0; k < temp.Count; k++)
+        {
+            cardtexts1[k].text = "Name: " + temp[k].ToString() + " Cost: " + temp[k].GetCost();
         }
     }
 
@@ -137,10 +142,15 @@ public class GameScript : MonoBehaviour {
         {
             cardtexts2[k].text = " ";
         }
-        //effects.RemoveAt(i);
-        for (int k = 0; k < effects.Count; k++)
+        List<ICard> temp = new List<ICard>();
+        foreach (ICard card in effects)
         {
-            cardtexts2[k].text = "Name: " + effects[k].ToString() + " Cost: " + effects[k].GetCost();
+            temp.Add(card);
+        }
+        temp.RemoveAt(i);
+        for (int k = 0; k < temp.Count; k++)
+        {
+            cardtexts2[k].text = "Name: " + temp[k].ToString() + " Cost: " + temp[k].GetCost();
         }
 
     }
