@@ -129,11 +129,11 @@ public class GameController : MonoBehaviour {
             }
 
 			if(selectionType == SelectionType.SelectCardToPlay && currentPlayer.HasCards()){
-				Debug.Log("The Highlighted Card is highlighted: " + currentPlayer.CardIsHighlighted(numIndex));
-				Debug.Log("Selected Card: " + numIndex);
+				//Debug.Log("The Highlighted Card is highlighted: " + currentPlayer.CardIsHighlighted(numIndex));
+				//Debug.Log("Selected Card: " + numIndex);
 
 				numObjects = currentPlayer.GetHandSize();
-				Debug.Log("Number of Cards: " + currentPlayer.GetHandSize());
+                //Debug.Log("Number of Cards: " + currentPlayer.GetHandSize());
                 if (numCardsHighlighted == 0 && currentPlayer.HasCards()) {
                     currentPlayer.HighlightCard(0);
                     numCardsHighlighted++;
@@ -156,8 +156,12 @@ public class GameController : MonoBehaviour {
                             break;
 
                         case KeyCode.Return:
-                            currentPlayer.ActivateCard(numIndex);
-                            numCardsHighlighted--;
+                            CardState c = currentPlayer.GetCard(numIndex).GetComponent<Card>().GetState();
+                            if(c.GetCost() <= currentPlayer.currentEnergy)
+                            {
+                                currentPlayer.ActivateCard(numIndex);
+                                numCardsHighlighted--;
+                            }
                             break;
                     }
                 }

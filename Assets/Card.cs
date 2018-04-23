@@ -7,10 +7,17 @@ using UnityEngine.UI;
 public class Card : MonoBehaviour {
 
     private CardState cardState;
-    private AudioClip HighlightSound;
+    //private AudioClip HighlightSound;
 
     void Awake () {
-        SetIconSprite();
+        //SetIconSprite();
+        //this.gameObject.transform.GetChild(0).GetComponent<SpriteRenderer>().sprite = cardState.GetIcon();
+        //this.gameObject.transform.GetChild(0).GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("Sprites/FistStatic");
+    }
+
+    public string Test()
+    {
+        return cardState.GetIconString();
     }
 
     private SpriteRenderer GetRenderer() {
@@ -21,13 +28,14 @@ public class Card : MonoBehaviour {
         r.sprite = Resources.Load<Sprite>(filePath);
     }
 
+
     private void SetIconSprite()
     {
         this.gameObject.transform.GetChild(0).GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("Sprites/FistStatic");
     }
 
-
     public void Highlight(){
+        this.tag = "SelectedCard";
         SpriteRenderer r = GetRenderer();
         SetSprite(r, "Sprites/CardFrontHighlighted");
         r.sortingOrder = 2;
@@ -38,11 +46,11 @@ public class Card : MonoBehaviour {
     }
 
     public void UnHighlight() {
+        this.tag = "Untagged";
         SpriteRenderer r = GetRenderer();
         SetSprite(r, "Sprites/CardFront");
         r.sortingOrder = 0;
         gameObject.transform.GetChild(0).GetComponent<SpriteRenderer>().sortingOrder = 1;
-
     }
 
     public bool IsHighlighted() {
@@ -58,10 +66,15 @@ public class Card : MonoBehaviour {
 
     public void SetState(CardState c) {
         cardState = c;
+        //Debug.Log(cardState.GetIconString());
+        //this.gameObject.transform.GetChild(0).GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>(cardState.GetIconString());
+        this.gameObject.transform.GetChild(0).GetComponent<SpriteRenderer>().sprite = cardState.GetIcon();
     }
 
     public void AddState(CardState c){
         cardState = c;
+        //this.gameObject.transform.GetChild(0).GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>(cardState.GetIconString());
+        this.gameObject.transform.GetChild(0).GetComponent<SpriteRenderer>().sprite = cardState.GetIcon();
     }
 
     public CardState GetState() {
@@ -158,7 +171,7 @@ public class Card : MonoBehaviour {
             i++;
         }
 
-        GameObject.FindWithTag("MainCamera").GetComponent<AudioSource>().PlayOneShot(cardState.soundEffect, 1);
+        GameObject.FindWithTag("MainCamera").GetComponent<AudioSource>().PlayOneShot(cardState.GetSoundEffect(), 1);
 
 
         //Add the card state to the current 

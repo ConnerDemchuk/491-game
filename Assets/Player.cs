@@ -28,6 +28,8 @@ public class Player : Entity {
         deck = new List<CardState>();
         discard = new List<CardState>();
         trash = new List<CardState>();
+        effects = new List<Effect>();
+
 
         energyPerTurn = 4;
         currentEnergy = energyPerTurn;
@@ -37,9 +39,21 @@ public class Player : Entity {
             ex
         };
 
-        for (int i = 0; i < 50; i++){
-            deck.Add(new CardState("example", 1, li, "Sounds/PunchSound"));
+        for (int i = 0; i < 25; i++)
+        {
+            deck.Add(new StrikeState());
+            deck.Add(new HealState());
+            deck.Add(new BetrayState());
+            deck.Add(new PoisonState());
         }
+
+        //For testing new cards
+        //for (int i = 0; i < 25; i++)
+        //{
+        //    //deck.Add(new DumpState());
+        //    //deck.Add(new BetrayState());
+        //    deck.Add(new PoisonState());
+        //}
     }
 
     
@@ -54,6 +68,7 @@ public class Player : Entity {
 		  Debug.Log("Made Card: " + i);
         }
         gameObject.tag = "CurrentEntity";
+        ApplyEffects();
     }
 
     public void OrganizeCards(){
@@ -130,6 +145,16 @@ public class Player : Entity {
 
     public int GetHandSize() {
         return hand.Count;
+    }
+
+    public override List<CardState> GetDeck()
+    {
+        return deck;
+    }
+
+    public override void SetDeck(List<CardState> deck)
+    {
+        this.deck = deck;
     }
 
 

@@ -13,6 +13,8 @@ public class Enemy : Entity {
     void Awake(){
         r = new System.Random();
         hand = new List<CardState>();
+        effects = new List<Effect>();
+
 
         Task ex = new Damage(10);
         List<Task> li = new List<Task>();
@@ -20,12 +22,23 @@ public class Enemy : Entity {
         li.Add(ex);
 
         for(int i = 0; i < 3; i++){
-            hand.Add(new CardState("Damage 10", 1, li, "Sounds/PunchSound"));
+            hand.Add(new StrikeState());
         }
     }
 
     override public void BeginTurn(){
+        ApplyEffects();
         gameObject.tag = "CurrentEntity";
+    }
+
+    public override List<CardState> GetDeck()
+    {
+        return hand;
+    }
+
+    public override void SetDeck(List<CardState> deck)
+    {
+        hand = deck;
     }
 
     public void ActivateEffect(){

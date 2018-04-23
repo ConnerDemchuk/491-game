@@ -23,8 +23,7 @@ public class CardPile : MonoBehaviour {
         for(int i = 0; i < 49; i++){
             List<Task> cList = new List<Task>();
             cList.Add(new DebugTask(i));
-            CardState c = new CardState("Debug", 0, cList, "Sounds/PunchSound");
-            deck.Add(c);
+            deck.Add(new StrikeState());
         }
         Initiate(5);
 

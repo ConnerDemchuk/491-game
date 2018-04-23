@@ -10,14 +10,45 @@ public class Entity : MonoBehaviour {
     private int hp = 100;
 
     public List<CardState> allCards;
+    public List<Effect> effects;
 
     void Awake () {
         allCards = new List<CardState>();
+        effects = new List<Effect>();
 	}
 
     public virtual void BeginTurn() {}
     public virtual void EndTurn() {}
     public virtual void ActivateCard() {}
+    public virtual List<CardState> GetDeck() { return allCards; }
+    public virtual void SetDeck(List<CardState> deck) { }
+
+    public void AddEffect(Effect e)
+    {
+        effects.Add(e);
+    }
+
+    public void ApplyEffects()
+    {
+        for(int i=0; i < effects.Count; i++)
+        {
+            if(effects[i].GetTurnNum() > 0)
+            {
+                if (effects[i].GetHeals() == true)
+                {
+                    Heal(effects[i].GetDamage());
+                }
+                else
+                {
+                    Damage(effects[i].GetDamage());
+                }
+                effects[i].DecrementTurn();
+            } else
+            {
+                effects.RemoveAt(i);
+            }
+        }
+    }
 
     public int GetMaxHP() {
         return maxHP;
