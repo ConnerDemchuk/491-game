@@ -32,7 +32,7 @@ public class CardInfoText : MonoBehaviour
         }
         else
         {
-            info.text = "null";
+            info.text = "End Your Turn";
         }
     }
 }

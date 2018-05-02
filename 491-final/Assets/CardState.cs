@@ -119,13 +119,13 @@ public class UnstableState : CardState {
         };
     }
 }
-//NOT WORKING YET
+
 public class TrashState : CardState
 {
     private static string NAME = "Trash";
     private static int COST = 1;
 
-    public TrashState() : base(NAME, COST, MyTasks(), "Sounds/PunchSound", "Sprites/CardIcons/Null", "Does nothing of interest")
+    public TrashState() : base(NAME, COST, MyTasks(), "Sounds/FailSound", "Sprites/CardIcons/Null", "Does nothing of interest")
     {
     }
 
@@ -141,7 +141,7 @@ public class DumpState : CardState
     private static string NAME = "Trash Dump";
     private static int COST = 4;
 
-    public DumpState() : base(NAME, COST, MyTasks(), "Sounds/PunchSound", "Sprites/CardIcons/Heart", "Adds a card that does nothing into an entity's deck for the battle")
+    public DumpState() : base(NAME, COST, MyTasks(), "Sounds/DumpSound", "Sprites/CardIcons/DumpNull", "Adds a card that does nothing into an entity's deck for the battle")
     {
     }
 
@@ -204,6 +204,7 @@ public class HealEffectState : CardState
     }
 }
 
+//Not working yet. Needs work
 public class LeechState : CardState
 {
     private static string NAME = "Leech";
@@ -224,10 +225,10 @@ public class LeechState : CardState
 
 public class DamageAllState : CardState
 {
-    private static string NAME = "Flail";
+    private static string NAME = "Rampage";
     private static int COST = 2;
 
-    public DamageAllState() : base(NAME, COST, MyTasks(), "Sounds/HealEffectSound", "Sprites/CardIcons/MultiFist", "Deals 15 damage to every entity but you")
+    public DamageAllState() : base(NAME, COST, MyTasks(), "Sounds/NukeSound", "Sprites/CardIcons/DamageAll", "Deals 15 damage to every entity but you")
     {
     }
 
@@ -241,10 +242,10 @@ public class DamageAllState : CardState
 
 public class NukeState : CardState
 {
-    private static string NAME = "Rampage";
+    private static string NAME = "Explosion";
     private static int COST = 3;
 
-    public NukeState() : base(NAME, COST, MyTasks(), "Sounds/HealEffectSound", "Sprites/CardIcons/Nuke", "Deals 25 damage to all entities")
+    public NukeState() : base(NAME, COST, MyTasks(), "Sounds/NukeSound", "Sprites/CardIcons/Nuke", "Deals 25 damage to all entities")
     {
     }
 

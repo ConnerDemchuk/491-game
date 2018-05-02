@@ -31,11 +31,11 @@ public class Menu : MonoBehaviour {
 
 
   public void AddText(Vector3 position, string text){
-    Vector3 p = position + new Vector3(0f, 0f, 100f);
+    Vector3 p = position + new Vector3(0, 0, 100f);
     GameObject g = Instantiate(Resources.Load("Text"), p, Quaternion.identity) as GameObject;
 
     g.transform.SetParent(gameObject.transform.GetChild(0).transform, false);
-
+    g.transform.position = p;
     Text t = g.GetComponent<Text>();//g.GetComponent<Text>();
     t.text = text;
     t.alignment = TextAnchor.MiddleCenter;
@@ -106,6 +106,12 @@ public class Menu : MonoBehaviour {
     GameObject g = Instantiate(Resources.Load("Menu"), new Vector3(0,0,0), Quaternion.identity) as GameObject;
     Menu menu = g.GetComponent<Menu>();
     menu.AddSelectableText(new Vector3(10.3f,6.3f,0), "Start Game");
+    menu.AddText(new Vector3(0f, 3f, 0), "Decked Out");
+    menu.AddText(new Vector3(0f, 2f, 0), "Welcome to Decked Out. This is a cooperative digital card game where you will be battling enemies.");
+    menu.AddText(new Vector3(0f, 1f, 0), "Each player will have 4 energy with which they can use to play cards.");
+    menu.AddText(new Vector3(0f, 0f, 0), "Player one will begin and once their turn is over it will be Player two's turn.");
+    menu.AddText(new Vector3(0f, -1f, 0), "If there are no cards left to play, then you can select the end turn button.");
+    menu.AddText(new Vector3(0f, -2f, 0), "After a win, you will be given a chance to add a special new card to one of the player's decks.");
 
     return g;
   }
