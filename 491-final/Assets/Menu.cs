@@ -9,6 +9,8 @@ public class Menu : MonoBehaviour {
   private GameController controller;
   private List<Text> selectableText;
   private List<Text> normalText;
+    public Font bridgnorth;
+    public Font bridgnorthBold;
 
 
   Color highlighted;
@@ -23,10 +25,11 @@ public class Menu : MonoBehaviour {
       normalText = new List<Text>();
       selectableIndex = 0;
 
-      //gameObject.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("menu_no_text");
+        //gameObject.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("menu_no_text");
+        bridgnorth = Resources.Load<Font>("bridgnorth/Bridgnorth-Regular");
+        bridgnorthBold = Resources.Load<Font>("bridgnorth/Bridgnorth-Bold");
 
-
-      gameObject.transform.GetChild(0).GetComponent<Canvas>().worldCamera = GameObject.FindWithTag("MainCamera").GetComponent<Camera>();
+        gameObject.transform.GetChild(0).GetComponent<Canvas>().worldCamera = GameObject.FindWithTag("MainCamera").GetComponent<Camera>();
   }
 
 
@@ -40,11 +43,28 @@ public class Menu : MonoBehaviour {
     t.text = text;
     t.alignment = TextAnchor.MiddleCenter;
     t.fontSize = 1;
+    t.font = bridgnorth;
 
     normalText.Add(t);
   }
 
-  public void AddSelectableText(Vector3 position, string text){
+    public void AddTextTitle(Vector3 position, string text)
+    {
+        Vector3 p = position + new Vector3(0, 0, 100f);
+        GameObject g = Instantiate(Resources.Load("Text"), p, Quaternion.identity) as GameObject;
+
+        g.transform.SetParent(gameObject.transform.GetChild(0).transform, false);
+        g.transform.position = p;
+        Text t = g.GetComponent<Text>();//g.GetComponent<Text>();
+        t.text = text;
+        t.alignment = TextAnchor.MiddleCenter;
+        t.fontSize = 2;
+        t.font = bridgnorthBold;
+
+        normalText.Add(t);
+    }
+
+    public void AddSelectableText(Vector3 position, string text){
     Vector3 p = position + new Vector3(0f, 0f, 100f);
     GameObject g = Instantiate(Resources.Load("Text"), p, Quaternion.identity) as GameObject;
 
@@ -54,11 +74,12 @@ public class Menu : MonoBehaviour {
     t.text = text;
     t.alignment = TextAnchor.MiddleCenter;
     t.fontSize = 1;
+    t.font = bridgnorth;
 
-  //  t.transform.position = p;
+        //  t.transform.position = p;
 
 
-    if(selectableText.Count == 0){
+    if (selectableText.Count == 0){
       t.color = highlighted;
     }
 
@@ -106,7 +127,7 @@ public class Menu : MonoBehaviour {
     GameObject g = Instantiate(Resources.Load("Menu"), new Vector3(0,0,0), Quaternion.identity) as GameObject;
     Menu menu = g.GetComponent<Menu>();
     menu.AddSelectableText(new Vector3(10.3f,6.3f,0), "Start Game");
-    menu.AddText(new Vector3(0f, 3f, 0), "Decked Out");
+    menu.AddTextTitle(new Vector3(0f, 3f, 0), "Decked Out");
     menu.AddText(new Vector3(0f, 2f, 0), "Welcome to Decked Out. This is a cooperative digital card game where you will be battling enemies.");
     menu.AddText(new Vector3(0f, 1f, 0), "Each player will have 4 energy with which they can use to play cards.");
     menu.AddText(new Vector3(0f, 0f, 0), "Player one will begin and once their turn is over it will be Player two's turn.");

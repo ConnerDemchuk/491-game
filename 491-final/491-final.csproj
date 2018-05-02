@@ -299,6 +299,9 @@
     <Compile Include="Assets\TaskBuilder.cs" />
     <Compile Include="Assets\TestController.cs" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Assets\Resources\bridgnorth\1001fonts-bridgnorth-eula.txt" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="GenerateTargetFrameworkMonikerAttribute" />
 </Project>
