@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using UnityEngine;
@@ -7,13 +8,22 @@ using UnityEngine.UI;
 public class Player : Entity {
 
     private List<GameObject> handObjects;
+    private List<GameObject> offHand;
     private List<GameObject> energyObjects;
     public float r = 4f;
     private bool player1 = false;
     
+    public void RemoveFromHand(GameObject card)
+    {
+        handObjects.Remove(card);
+        offHand.Add(card);
+    }
+
     public new void Awake() {
 
         base.Awake();
+
+        offHand = new List<GameObject>();
 
         cardsPerTurn = 5;
         handLimit = 5;
@@ -66,11 +76,22 @@ public class Player : Entity {
     {
         base.DestroyAll();
         int size = handObjects.Count;
-        for(int i = 0; i < size; i++)
+        for (int i = 0; i < size; i++)
         {
             Destroy(handObjects[0]);
             handObjects.Remove(handObjects[0]);
         }
+
+        //int numOffCards = offHand.Count;
+        //for (int i = 0; i < numOffCards; i++)
+        //{
+        //    //Discard(0);
+        //    Destroy(offHand[0]);
+        //    offHand.RemoveAt(0);
+        //}
+
+
+
         size = energyObjects.Count;
         for (int i = 0; i < size; i++)
         {
@@ -78,6 +99,66 @@ public class Player : Entity {
             energyObjects.Remove(energyObjects[0]);
         }
 
+        Destroy(gameObject);
+
+    }
+
+    public void SetAnimating(bool b)
+    {
+        isAnimating = b;
+    }
+
+    public IEnumerator ToBeDestroyed()
+    {
+        int numCards1 = handObjects.Count;
+        for (int i = 0; i < numCards1; i++)
+        {
+            handObjects[i].GetComponent<SpriteRenderer>().enabled = false;
+            //Destroy(handObjects[0]);
+            //handObjects.RemoveAt(0);
+        }
+
+
+        while (isAnimating)
+        {
+            Debug.Log("is animating");
+            yield return null;
+        }
+        int numCards = handObjects.Count;
+        for (int i = 0; i < numCards; i++)
+        {
+            //Discard(0);
+            Destroy(handObjects[0]);
+            handObjects.RemoveAt(0);
+        }
+
+        int numoffcards = offHand.Count;
+        for (int i = 0; i < numoffcards; i++)
+        {
+            //discard(0);
+            Destroy(offHand[0]);
+            offHand.RemoveAt(0);
+        }
+
+
+        Card[] cards = GetComponents<Card>();
+        int size = cards.Length;
+
+        for (int i = 0; i < size; i++)
+        {
+            Destroy(cards[i].gameObject);
+        }
+
+
+        int sizeEnergy = energyObjects.Count;
+        for (int i = 0; i < sizeEnergy; i++)
+        {
+            if (energyObjects[0] != null)
+            {
+                Destroy(energyObjects[0]);
+            }
+            energyObjects.Remove(energyObjects[0]);
+        }
     }
 
     override public bool BeginTurn() {
@@ -122,30 +203,31 @@ public class Player : Entity {
     }
 
     override public void EndTurn() {
-        int numCards = handObjects.Count;
-        for (int i = 0; i < numCards; i++) {
-            //Discard(0);
-            Destroy(handObjects[0]);
-            handObjects.RemoveAt(0);
-        }
+        StartCoroutine(ToBeDestroyed());
+        //int numCards = handObjects.Count;
+        //for (int i = 0; i < numCards; i++) {
+        //    //Discard(0);
+        //    Destroy(handObjects[0]);
+        //    handObjects.RemoveAt(0);
+        //}
 
-        Card[] cards = GetComponents<Card>();
-        int size = cards.Length;
+        //Card[] cards = GetComponents<Card>();
+        //int size = cards.Length;
 
-        for(int i = 0; i < size; i++)
-        {
-            Destroy(cards[i].gameObject);
-        }
+        //for(int i = 0; i < size; i++)
+        //{
+        //    Destroy(cards[i].gameObject);
+        //}
 
-        int sizeEnergy = energyObjects.Count;
-        for (int i = 0; i < sizeEnergy; i++)
-        {
-            if (energyObjects[0] != null)
-            {
-                Destroy(energyObjects[0]);
-            }
-            energyObjects.Remove(energyObjects[0]);
-        }
+        //int sizeEnergy = energyObjects.Count;
+        //for (int i = 0; i < sizeEnergy; i++)
+        //{
+        //    if (energyObjects[0] != null)
+        //    {
+        //        Destroy(energyObjects[0]);
+        //    }
+        //    energyObjects.Remove(energyObjects[0]);
+        //}
     }
 
     public bool Discard(GameObject card) {

@@ -430,9 +430,10 @@ private void NextTurn() {
 
 public void Kill(Entity e) {
         AddToScore(15);
-        e.DestroyAll();
+        //e.DestroyAll();
         entities.Remove(e);
-        Destroy(e.GetGameObject());
+        e.DieSoon();
+        //Destroy(e.GetGameObject());
 }
 
 public void CardSelect(int n, int numCards) {

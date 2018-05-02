@@ -27,6 +27,12 @@ public class Enemy : Entity {
         }
     }
 
+    public override void DestroyAll()
+    {
+        base.DestroyAll();
+        Destroy(gameObject);
+    }
+
     public void ActivateEffect() {
       List<Player> players = GameController.GetGameController().GetPlayers();
       List<CardState> hand = GetHand();
@@ -55,9 +61,11 @@ public IEnumerator flash(GameObject g) {
         }
         GameController gC = GameController.GetGameController();
         //gC.SetGameState(GameController.GameType.Battle);
+        isAnimating = false;
 }
 
 public IEnumerator Animation(GameObject g, GameObject attacked, CardState cardState){
+        isAnimating = true;
         Sprite newSprite = Resources.Load<Sprite>(cardState.GetSpriteString());//gameObject.transform.GetChild(0).GetComponent<SpriteRenderer>().sprite;//Resources.Load<Sprite>(cardState.GetSpriteString());
         GameObject animated = new GameObject();
         SpriteRenderer renderer = animated.AddComponent<SpriteRenderer>();

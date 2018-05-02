@@ -10,6 +10,7 @@ public class Card : MonoBehaviour
 
     private CardState cardState;
     private GameController controller;
+    private Player p;
 
     void Awake()
     {
@@ -84,6 +85,12 @@ public class Card : MonoBehaviour
 
     public void ActivateCard()
     {
+        GameController gC = GameController.GetGameController();
+        //gC.SetGameState(GameController.GameType.NullState);
+
+        p = gC.currentEntity.gameObject.GetComponent<Player>();
+
+        p.RemoveFromHand(gameObject);
         if (controller.currentEntity is Player)
         {
             Renderer[] r = gameObject.GetComponents<Renderer>();
@@ -231,15 +238,24 @@ public class Card : MonoBehaviour
         }
         if (!thing)
         {
-            Player p = (Player)controller.currentEntity.gameObject.GetComponent<Entity>();
-            p.Discard(gameObject);
+            Player p1 = (Player)controller.currentEntity.gameObject.GetComponent<Entity>();
+            p1.Discard(gameObject);
         }
+
+        GameController gC = GameController.GetGameController();
+        //gC.SetGameState(GameController.GameType.NullState);
+
+        p.SetAnimating(false);
+
     }
 
     public IEnumerator Animation(GameObject g)
     {
         GameController gC = GameController.GetGameController();
         //gC.SetGameState(GameController.GameType.NullState);
+
+
+        p.SetAnimating(true);
 
         Sprite newSprite = gameObject.transform.GetChild(0).GetComponent<SpriteRenderer>().sprite;//Resources.Load<Sprite>(cardState.GetSpriteString());
         GameObject animated = new GameObject();

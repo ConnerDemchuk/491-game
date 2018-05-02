@@ -7,6 +7,18 @@ using UnityEngine.UI;
 
 public class Entity : MonoBehaviour {
 
+
+    private void Update()
+    {
+        if (isDead && !isAnimating)
+        {
+            DestroyAll();
+        }
+    }
+
+    protected bool isDead = false;
+    protected bool isAnimating = false;
+
     new private GameObject gameObject;
     protected GameController controller;
     private Slider hpBar;
@@ -29,6 +41,11 @@ public class Entity : MonoBehaviour {
     public virtual void DestroyAll()
     {
 
+    }
+    
+    public void DieSoon()
+    {
+        isDead = true;
     }
 
     public void Awake () {
