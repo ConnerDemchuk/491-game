@@ -131,7 +131,7 @@ public class Menu : MonoBehaviour {
     menu.AddText(new Vector3(0f, 2f, 0), "Welcome to Decked Out. This is a cooperative digital card game where you will be battling enemies.");
     menu.AddText(new Vector3(0f, 1f, 0), "Each player will have 4 energy with which they can use to play cards.");
     menu.AddText(new Vector3(0f, 0f, 0), "Player one will begin and once their turn is over it will be Player two's turn.");
-    menu.AddText(new Vector3(0f, -1f, 0), "If there are no cards left to play, then you can select the end turn button.");
+    menu.AddText(new Vector3(0f, -1f, 0), "Take turns using the arrow keys and the enter button to select cards.");
     menu.AddText(new Vector3(0f, -2f, 0), "After a win, you will be given a chance to add a special new card to one of the player's decks.");
 
     return g;
