@@ -8,3 +8,9 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/cards.unity
     guid: 27b30c2ccec714321b1f621f54d79225
+  - enabled: 0
+    path: Assets/1920x1200optimized.unity
+    guid: f6acb7b7ed889c542a7c64b68bf0a5c7
+  - enabled: 0
+    path: Assets/1440x900optimized.unity
+    guid: 613974bcaf5ac2640adfb64f3ffd7b51

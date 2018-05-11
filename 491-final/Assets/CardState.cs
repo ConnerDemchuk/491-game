@@ -98,10 +98,42 @@ public class StrikeState : CardState {
     }
 
     private static List<Task> MyTasks() {
-        System.Random r = new System.Random();
-
+        GameController gc = GameController.GetGameController();
         return new List<Task> {
-            new Damage(3*r.Next() + 9)
+            new Damage(gc.r.Next(5) + 10)
+        };
+    }
+}
+
+public class ImprovedStrikeState : CardState
+{
+    private static string NAME = "Improved Strike";
+    private static int COST = 1;
+
+    public ImprovedStrikeState() : base(NAME, COST, MyTasks(), "Sounds/PunchSound", "Sprites/CardIcons/ImprovedFist", "Deals 20 damage")
+    {
+        System.Random rand = new System.Random();
+
+        double u1 = 1.0 - rand.NextDouble();
+        double u2 = 1.0 - rand.NextDouble();
+        double randStdNormal = Math.Sqrt(-2.0f * Math.Log(u1)) * Math.Sin(2.0f * Math.PI * u2);
+
+
+        int amount = (int)(2 * randStdNormal) + 9;
+        amount = 20;
+        info = "Deals " + amount + " damage";
+
+        tasks = new List<Task> {
+            new Damage(amount)
+        };
+
+    }
+
+    private static List<Task> MyTasks()
+    {
+        GameController gc = GameController.GetGameController();
+        return new List<Task> {
+            new Damage(gc.r.Next(5) + 10)
         };
     }
 }
@@ -132,15 +164,44 @@ public class HealState : CardState
 
     private static List<Task> MyTasks()
     {
-        System.Random r = new System.Random();
-
+        GameController gc = GameController.GetGameController();
         return new List<Task> {
-            new Heal(r.Next(3) + 4)
+            new Heal(gc.r.Next(3) + 5)
+        };
+    }
+}
+
+public class ImprovedHealState : CardState
+{
+    private static string NAME = "Improved Heal";
+    private static int COST = 1;
+
+    public ImprovedHealState() : base(NAME, COST, MyTasks(), "Sounds/HealSound", "Sprites/CardIcons/ImprovedHeart", "Heals an entity 5 hp")
+    {
+        System.Random rand = new System.Random();
+
+        double u1 = 1.0 - rand.NextDouble();
+        double u2 = 1.0 - rand.NextDouble();
+        double randStdNormal = Math.Sqrt(-2.0f * Math.Log(u1)) * Math.Sin(2.0f * Math.PI * u2);
+
+
+        int amount = 4 + (int)(randStdNormal * 2);
+        amount = 10;
+
+        info = "Heals an entity for " + amount + " HP";
+
+        tasks = new List<Task> {
+            new Heal(amount)
         };
     }
 
-
-
+    private static List<Task> MyTasks()
+    {
+        GameController gc = GameController.GetGameController();
+        return new List<Task> {
+            new Heal(gc.r.Next(3) + 5)
+        };
+    }
 }
 
 public class UnstableState : CardState {
@@ -190,6 +251,80 @@ public class DumpState : CardState
     }
 }
 
+public class LootBoxState : CardState
+{
+    private static string NAME = "Loot Box";
+    private static int COST = 2;
+    private static List<CardState> cards = new List<CardState> {new BetrayState(), new PoisonState(), new HealEffectState(), new DamageAllState(), new NukeState()};
+
+    public LootBoxState() : base(NAME, COST, MyTasks(), "Sounds/DumpSound", "Sprites/CardIcons/TreasureChest", "Adds a random card into an entity's deck for the battle")
+    {
+        
+    }
+
+    private static List<Task> MyTasks()
+    {
+        GameController gc = GameController.GetGameController();
+        return new List<Task> {
+            new InsertCard(cards[gc.r.Next(4)])
+        };
+    }
+}
+
+public class PermaLootBoxState : CardState
+{
+    private static string NAME = "Permanent Loot Box";
+    private static int COST = 4;
+    private static List<CardState> cards = new List<CardState> { new BetrayState(), new PoisonState(), new HealEffectState(), new DamageAllState(), new NukeState() };
+
+    public PermaLootBoxState() : base(NAME, COST, MyTasks(), "Sounds/DumpSound", "Sprites/CardIcons/ImprovedTreasureChest", "Adds a random card into an entity's deck for the rest of the game")
+    {
+
+    }
+
+    private static List<Task> MyTasks()
+    {
+        GameController gc = GameController.GetGameController();
+        return new List<Task> {
+            new PermaInsertCard(cards[gc.r.Next(4)])
+        };
+    }
+}
+
+public class InvestStrikeState : CardState
+{
+    private static string NAME = "Strike Invest";
+    private static int COST = 2;
+
+    public InvestStrikeState() : base(NAME, COST, MyTasks(), "Sounds/DumpSound", "Sprites/CardIcons/InsertImprovedFist", "Adds 3 Strike cards with double the damage into an entity's deck for the battle")
+    {
+    }
+
+    private static List<Task> MyTasks()
+    {
+        return new List<Task> {
+            new InsertCards(new ImprovedStrikeState(), 3)
+        };
+    }
+}
+
+public class InvestHealState : CardState
+{
+    private static string NAME = "Heal Invest";
+    private static int COST = 2;
+
+    public InvestHealState() : base(NAME, COST, MyTasks(), "Sounds/DumpSound", "Sprites/CardIcons/InsertImprovedHeart", "Adds 3 Heals with double the health into an entity's deck for the battle")
+    {
+    }
+
+    private static List<Task> MyTasks()
+    {
+        return new List<Task> {
+            new InsertCards(new ImprovedHealState(), 3)
+        };
+    }
+}
+
 public class BetrayState : CardState
 {
     private static string NAME = "Betrayal";
@@ -219,7 +354,7 @@ public class PoisonState : CardState
     private static List<Task> MyTasks()
     {
         return new List<Task> {
-           new PoisonEffect(10, 3)
+           new PoisonEffect(25, 3)
         };
     }
 }
@@ -307,6 +442,23 @@ public class MultiStrikeState : CardState
     {
         return new List<Task> {
            new MultiDamage(10, 4)
+        };
+    }
+}
+
+public class HealBothState : CardState
+{
+    private static string NAME = "Healing Circle";
+    private static int COST = 3;
+
+    public HealBothState() : base(NAME, COST, MyTasks(), "Sounds/HealSound", "Sprites/CardIcons/Heart", "Heals both players 5 HP")
+    {
+    }
+
+    private static List<Task> MyTasks()
+    {
+        return new List<Task> {
+            new HealBoth(20)
         };
     }
 }

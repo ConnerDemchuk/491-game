@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using System.IO.Ports; 
 
 public class GameController : MonoBehaviour {
 
@@ -51,6 +52,7 @@ private int selectionIndex;
 private int lastEnemySelectedIndex = -1;
 private const KeyCode UNUSED_KEY = KeyCode.A;
 public KeyCode prevCode = UNUSED_KEY;
+private SerialPort serial;
 
 public enum SelectionType {
         SelectCardToPlay,
@@ -59,11 +61,16 @@ public enum SelectionType {
         SelectEntity
 };
 
+public System.Random r = new System.Random();
 
-Menu menu;
+
+    Menu menu;
 public SelectionType selectionType;
 
 void Awake () {
+
+        //serial = new SerialPort("COM2", 9600);
+        //serial.Open();
 
         // **************** NEW CODE *******************************
         AllCardStates = new List<CardStateBuilder>();
@@ -98,13 +105,19 @@ void Awake () {
         CardStateBuilder.AddToAll(new HealEffectState());
         CardStateBuilder.AddToAll(new DamageAllState());
         CardStateBuilder.AddToAll(new MultiStrikeState());
+        CardStateBuilder.AddToAll(new LootBoxState());
+        CardStateBuilder.AddToAll(new PermaLootBoxState());
+        CardStateBuilder.AddToAll(new ImprovedStrikeState());
+        CardStateBuilder.AddToAll(new ImprovedHealState());
+        CardStateBuilder.AddToAll(new InvestStrikeState());
+        CardStateBuilder.AddToAll(new InvestHealState());
 
         CardStateBuilder.AddToAllEnemy(new StrikeState());
         CardStateBuilder.AddToAllEnemy(new PoisonState());
         CardStateBuilder.AddToAllEnemy(new NukeState());
         CardStateBuilder.AddToAllEnemy(new DumpState());
         CardStateBuilder.AddToAllEnemy(new MultiStrikeState());
-
+        CardStateBuilder.AddToAllEnemy(new ImprovedStrikeState());
 
 
         menu = Menu.InitialMenu().GetComponent<Menu>();
@@ -524,7 +537,56 @@ public static KeyCode GetKey() {
         return UNUSED_KEY;
 }
 
+//USED FOR THE CONTROLLER WHEN IT'S IN USE
+//public KeyCode GetKey()
+//    {
+//        //if (Input.GetKey(KeyCode.Return)) return KeyCode.Return;
+//        //if (Input.GetKey(KeyCode.LeftArrow)) return KeyCode.LeftArrow;
+//        //if (Input.GetKey(KeyCode.RightArrow)) return KeyCode.RightArrow;
+//        //return UNUSED_KEY;
+
+//        int packet = -1;
+//        while (serial.BytesToRead > 0)
+//        {
+//            packet = serial.ReadByte();
+//        }
+//        bool enter = false;
+//        bool left = false;
+//        bool right = false;
+
+//        // Debug.Log("Package Requested: " + packet);
+//        if (packet != -1)
+//        {
+//            if (packet >= 4)
+//            {
+//                right = true;
+//                packet -= 4;
+//            }
+//            if (packet >= 2)
+//            {
+//                enter = true;
+//                packet -= 2;
+//            }
+//            if (packet >= 1)
+//            {
+//                left = true;
+//                packet -= 1;
+//            }
+
+//            Debug.Log("Enter: " + enter);
+//            Debug.Log("Left: " + left);
+//            Debug.Log("Right: " + right);
+//            Debug.Log("\n");
+
+//            if (enter) return KeyCode.Return;
+//            if (left) return KeyCode.LeftArrow;
+//            if (right) return KeyCode.RightArrow;
+//        }
+
+//        return UNUSED_KEY;
+//}
+
 public Entity GetHighlightedEntity() {
-        return highlightedEntity;
+   return highlightedEntity;
 }
 }

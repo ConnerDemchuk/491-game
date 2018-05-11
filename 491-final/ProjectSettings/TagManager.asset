@@ -14,6 +14,8 @@ TagManager:
   - SelectedCard
   - MenuCanvas
   - EndTurnButton
+  - CardInfo
+  - CardInfoBox
   layers:
   - Default
   - TransparentFX

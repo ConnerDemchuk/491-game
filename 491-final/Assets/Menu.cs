@@ -140,8 +140,19 @@ public class Menu : MonoBehaviour {
   public static GameObject PickACardMenu(){
     GameObject g = Instantiate(Resources.Load("Menu"), new Vector3(0,0,0), Quaternion.identity) as GameObject;
     Menu menu = g.GetComponent<Menu>();
-    menu.AddText(new Vector3(0f,3f,0), "Select a Card to add to a Player's Deck");
+    menu.AddText(new Vector3(0f, -3f,0), "Select a Card to add to a Player's Deck");
 
+        GameObject[] cardInfoText = GameObject.FindGameObjectsWithTag("CardInfo");
+        GameObject[] cardInfoBox = GameObject.FindGameObjectsWithTag("CardInfoBox");
+
+        cardInfoBox[0].GetComponent<SpriteRenderer>().sortingLayerName = "Menu Layer";
+        cardInfoBox[0].GetComponent<SpriteRenderer>().sortingOrder = 5;
+        for (int i=0; i<cardInfoText.Length; i++)
+        {
+            cardInfoText[i].GetComponent<Canvas>().sortingLayerName = "Menu Layer";
+            cardInfoText[i].GetComponent<Canvas>().sortingOrder = 6;
+        }
+    
     return g;
   }
 
@@ -169,7 +180,15 @@ public class Menu : MonoBehaviour {
     }
     Destroy(gameObject);
         GameController.GetGameController().gameType = GameController.GameType.BattleSetup;
-
+        GameObject[] cardInfoText = GameObject.FindGameObjectsWithTag("CardInfo");
+        GameObject[] cardInfoBox = GameObject.FindGameObjectsWithTag("CardInfo");
+        cardInfoBox[0].GetComponent<SpriteRenderer>().sortingLayerName = "Default";
+        cardInfoBox[0].GetComponent<SpriteRenderer>().sortingOrder = 2;
+        for (int i = 0; i < cardInfoText.Length; i++)
+        {
+            cardInfoText[i].GetComponent<Canvas>().sortingLayerName = "UI";
+            cardInfoText[i].GetComponent<Canvas>().sortingOrder = 0;
+        }
     }
 
 

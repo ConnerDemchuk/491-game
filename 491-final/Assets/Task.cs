@@ -101,8 +101,8 @@ public class MultiDamage : Task
     override public void Run(GameObject input)
     {
         Entity p = input.GetComponent<Entity>();
-        System.Random r = new System.Random();
-        int n = r.Next(1, max);
+        GameController gc = GameController.GetGameController();
+        int n = gc.r.Next(1, max);
         for (int i = 0; i < n; i++)
         {
             p.Damage(damage);
@@ -294,6 +294,64 @@ public class InsertCard : Task
     }
 }
 
+//IS THIS A BAD IDEA??
+public class PermaInsertCard : Task
+{
+    CardState card;
+
+    public PermaInsertCard(CardState card)
+    {
+        this.type = Input.Entity;
+        this.card = card;
+    }
+
+    override public void Run(GameObject input)
+    {
+        Entity p = input.GetComponent<Entity>();
+        p.AddCard(card);
+
+    }
+
+    public override Task Clone()
+    {
+        return new PermaInsertCard(card);
+    }
+
+    public override void Set(float n)
+    {
+    }
+}
+
+public class InsertCards : Task
+{
+    CardState card;
+    int num;
+
+    public InsertCards(CardState card, int num)
+    {
+        this.type = Input.Entity;
+        this.card = card;
+    }
+
+    override public void Run(GameObject input)
+    {
+        Entity p = input.GetComponent<Entity>();
+        for(int i=0; i<num; i++)
+        {
+            p.AddToDeck(card);
+        }
+    }
+
+    public override Task Clone()
+    {
+        return new InsertCard(card);
+    }
+
+    public override void Set(float n)
+    {
+    }
+}
+
 public class PoisonEffect : Task
 {
 
@@ -351,5 +409,34 @@ public class HealEffect : Task
     public override void Set(float n)
     {
       damage = (int) n;
+    }
+}
+
+public class HealBoth : Task
+{
+    int heal = 0;
+
+    public HealBoth(int heal)
+    {
+        this.heal = heal;
+        this.type = Input.Null;
+    }
+
+    override public void Run(GameObject input)
+    {
+        //Entity p = input.GetComponent<Entity>();
+        GameController gc = GameController.GetGameController();
+        gc.GetPlayers()[0].Heal(heal);
+        gc.GetPlayers()[1].Heal(heal);
+    }
+
+    public override Task Clone()
+    {
+        return new HealBoth(heal);
+    }
+
+    public override void Set(float n)
+    {
+        heal = (int)n;
     }
 }

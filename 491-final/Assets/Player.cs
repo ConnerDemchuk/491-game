@@ -83,7 +83,13 @@ public class Player : Entity {
             //AddCard(new HealState());
             //AddCard(new NukeState());
             //AddCard(new LeechState());
-            //AddCard(new DumpState());        
+            //AddCard(new DumpState());  
+            //AddCard(new LootBoxState());
+            //AddCard(new PermaLootBoxState());
+            //AddCard(new ImprovedStrikeState());
+            //AddCard(new ImprovedHealState());
+            //AddCard(new InvestStrikeState());
+            //AddCard(new InvestHealState());
         }
 
         for(int i = 0; i < 3; i++)
